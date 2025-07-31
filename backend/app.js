@@ -36,7 +36,8 @@ app.use(
     cookie: {
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
       httpOnly: true,
-      secure: false, // Set to true if using HTTPS
+      secure: true,
+      sameSite: "none", // Set to true if using HTTPS
     },
   }),
 );
