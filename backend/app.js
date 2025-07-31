@@ -18,7 +18,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:5173", // your React app's address
+    origin: process.env.FRONTEND_URL, // your React app's address
     credentials: true, // allow cookies/session
   }),
 );
@@ -26,9 +26,7 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(
   session({
-    secret:
-      process.env.SESSION_SECRET ||
-      "vaultajidwji8u8934n4ij99j39883heoikjhduij2wi8dujwi8[333i",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
@@ -64,9 +62,7 @@ async function getEthPriceUSD() {
   }
 
   try {
-    const res = await axios.get(
-      "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd",
-    );
+    const res = await axios.get(process.env.COINGECKO_API_URL);
     cachedEthPrice = res.data.ethereum.usd;
     lastFetchTime = now;
     return cachedEthPrice;
@@ -202,5 +198,5 @@ provider.on("block", async (blockNumber) => {
   }
 });
 
-const PORT = 5000;
+const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
