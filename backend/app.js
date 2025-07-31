@@ -56,31 +56,31 @@ const provider = new ethers.JsonRpcProvider(
 let cachedEthPrice = null;
 let lastFetchTime = 0;
 
-async function getEthPriceUSD() {
-  const now = Date.now();
-  if (cachedEthPrice && now - lastFetchTime < 60 * 1000) {
-    return cachedEthPrice;
-  }
+// async function getEthPriceUSD() {
+//   const now = Date.now();
+//   if (cachedEthPrice && now - lastFetchTime < 60 * 1000) {
+//     return cachedEthPrice;
+//   }
 
-  try {
-    const res = await axios.get(process.env.COINGECKO_API_URL);
-    cachedEthPrice = res.data.ethereum.usd;
-    lastFetchTime = now;
-    return cachedEthPrice;
-  } catch (err) {
-    console.error(
-      "Failed to fetch ETH price:",
-      err.response?.data || err.message,
-    );
-    return 0; // fallback
-  }
-}
+//   try {
+//     const res = await axios.get(process.env.COINGECKO_API_URL);
+//     cachedEthPrice = res.data.ethereum.usd;
+//     lastFetchTime = now;
+//     return cachedEthPrice;
+//   } catch (err) {
+//     console.error(
+//       "Failed to fetch ETH price:",
+//       err.response?.data || err.message,
+//     );
+//     return 0; // fallback
+//   }
+// }
 
 provider.on("block", async (blockNumber) => {
   console.log(`Checking block ${blockNumber}`);
 
   const users = await User.find();
-  const ethPrice = await getEthPriceUSD();
+  // const ethPrice = await getEthPriceUSD();
 
   const block = await provider.getBlock(blockNumber, true);
   const transactions = block.transactions;
@@ -136,7 +136,7 @@ provider.on("block", async (blockNumber) => {
                   balance: ethAmount,
                   decimals: 18,
                   isNative: true,
-                  usdBalance: ethAmount * ethPrice,
+                  usdBalance: ethAmount,
                 };
                 const notis = {
                   title: "Deposit Received",
