@@ -98,7 +98,7 @@ const SendCrypto = () => {
     setLoading(true);
     setError("");
 
-    if (form.amountInEth > wallet?.balance) {
+    if (parseFloat(form.amountInEth) > wallet?.balance) {
       toast("Value exceeding wallet balance");
       setError("Value exceeding wallet balance");
       setLoading(false);

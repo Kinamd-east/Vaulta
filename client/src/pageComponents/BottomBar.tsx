@@ -14,6 +14,7 @@ const BottomBar = () => {
               <Plus size={20} color="white" />
             </div>
           }
+          link="/"
         />
         <BottomBarItem
           icon={<Activity size={22} />}

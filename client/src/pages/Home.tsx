@@ -184,7 +184,7 @@ const Home = () => {
 
   const handleCopy = () => {
     if (!mnemonicWords) return;
-    navigator.clipboard.writeText(mnemonicWords);
+    navigator.clipboard.writeText(mnemonicWords.join(" "));
   };
 
   const handleOpenModal = () => {
@@ -723,10 +723,13 @@ const Home = () => {
                       alert("Words don't match. Try again.");
                       return;
                     }
+                    if (!selectedWallet || !selectedWallet?._id) {
+                      return;
+                    }
 
                     // Mark as saved in DB
                     await fetch(
-                      `${import.meta.env.VITE_BACKEND_URL}/wallet/mark-phrase-saved/${selectedWallet._id}`,
+                      `${import.meta.env.VITE_BACKEND_URL}/wallet/mark-phrase-saved/${selectedWallet?._id}`,
                       {
                         method: "POST",
                         credentials: "include",
