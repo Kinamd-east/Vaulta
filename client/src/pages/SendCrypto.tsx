@@ -18,7 +18,9 @@ const SendCrypto = () => {
   const { user } = useUserAuthentication();
   const { id } = useParams();
   const [isSendingPin, setIsSendingPin] = useState(false);
-  const [wallet, setWallet] = useState(null);
+  const [wallet, setWallet] = useState({
+    balance: "",
+  });
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
   const [pin, setPin] = useState("");
@@ -97,17 +99,20 @@ const SendCrypto = () => {
     setError("");
 
     if (form.amountInEth > wallet?.balance) {
+      toast("Value exceeding wallet balance");
       setError("Value exceeding wallet balance");
       setLoading(false);
       return;
     }
     if (form.addressTo === "") {
+      toast("Address is required");
       setError("Address is required");
       setLoading(false);
       return;
     }
 
     if (form.amountInEth === 0) {
+      toast("Amount has to be higher than 0");
       setError("Amount has to be higher than 0");
       setLoading(false);
       return;
@@ -133,6 +138,7 @@ const SendCrypto = () => {
 
       if (!res.ok) {
         setError(data.message);
+        toast(data.message);
         setLoading(false);
         return;
       }
@@ -141,6 +147,7 @@ const SendCrypto = () => {
       toast("Verification code sent!");
       setLoading(false);
     } catch (err: any) {
+      toast("Failed to initiate transfer");
       setError("Failed to initiate transfer");
       setLoading(false);
     }
@@ -227,6 +234,8 @@ const SendCrypto = () => {
               <Button className="cursor-pointer" onClick={() => navigate("/")}>
                 Cancel
               </Button>
+              {error && <p style={{ color: "red" }}>{error}</p>}
+              {isSendingPin && <p style={{ color: "black" }}>Please Wait...</p>}
             </CardContent>
           </Card>
         </motion.div>

@@ -8,10 +8,9 @@ const ls = new SecureLS({ encodingType: "aes" });
 const getPinKey = (username: string): string => `vault_pin_${username}`;
 
 // Set PIN (store as string)
-export const setPin = (username: string, pin: number) => {
+export const setPin = (username: string, pin: number | string) => {
   const key = getPinKey(username);
   ls.set(key, pin.toString());
-  console.log(`Successfully set ${pin} for ${username}`);
 };
 
 // Verify entered PIN
@@ -30,7 +29,6 @@ export function verifyPin(
 export const hasPin = (username: string): boolean => {
   const key = getPinKey(username);
   const value = ls.get(key);
-  console.log("Checking PIN for:", username, "Key:", key, "Value:", value);
   return typeof value === "string" && value.trim() !== "";
 };
 

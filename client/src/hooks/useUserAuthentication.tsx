@@ -16,6 +16,7 @@ interface Asset {
   balance: number;
   contractAddress: string;
   decimals: number;
+  usdBalance: number;
   isNative: boolean;
 }
 
@@ -31,10 +32,17 @@ interface Notification {
 interface Wallet {
   _id: string;
   type: string;
+  name: string;
+  totalBalance: number;
   balance: number;
   address: string;
   privateKeyHashed: string;
   passwordHash: string;
+  privateKeyIv: string;
+  encryptedMnemonic: string;
+  isPhraseSaved: boolean;
+  passwordHash: string;
+  mnemonicIv: string;
   assets: Asset[];
   transactions: Transaction[];
   createdAt?: string;

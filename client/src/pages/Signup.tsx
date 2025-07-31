@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { toast } from "sonner";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -36,12 +37,14 @@ const Signup = () => {
 
       if (!res.ok) {
         const errorData = await res.json();
+        toast(errorData.message);
         throw new Error(errorData.message || "Signup failed");
         setLoading(false);
       }
 
       // Redirect to dashboard or home after successful signup
       setLoading(false);
+      toast("Signup successful, redirecting user....");
       navigate("/");
     } catch (err: any) {
       setLoading(false);

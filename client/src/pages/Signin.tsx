@@ -80,8 +80,9 @@ const Signin = () => {
                 required
               />
               <Button type="submit" className="w-full mt-2 cursor-pointer">
-                Sign In
+                {loading ? "Please wait..." : "Sign In"}
               </Button>
+              {error && <p style={{ color: "red" }}>{error}</p>}
             </form>
           </CardContent>
         </Card>

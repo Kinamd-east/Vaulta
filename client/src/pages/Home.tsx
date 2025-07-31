@@ -17,7 +17,6 @@ import useUserAuthentication from "@/hooks/useUserAuthentication";
 import clsx from "clsx";
 import {
   Settings,
-  MessageCircle,
   ChevronDownCircle,
   PlusCircle,
   Download,
@@ -25,8 +24,6 @@ import {
   Eye,
   EyeOff,
   X,
-  Send,
-  Trash2,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -36,12 +33,73 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+interface Transaction {
+  _id: string;
+  amount: number;
+  from: string;
+  txHash: string;
+  status: "PENDING" | "SUCCESS" | "FAILED";
+  createdAt?: string;
+}
+
+interface Asset {
+  _id: string;
+  symbol: string;
+  name: string;
+  balance: number;
+  contractAddress: string;
+  decimals: number;
+  usdBalance: number;
+  isNative: boolean;
+}
+
+interface Notification {
+  _id: string;
+  title: string;
+  message: string;
+  type: "INFO" | "ALERT" | "TRANSACTION" | "SECURITY" | "PROMOTION";
+  status: "UNREAD" | "READ";
+  createdAt?: string;
+}
+
+interface Wallet {
+  _id: string;
+  type: string;
+  name: string;
+  totalBalance: number;
+  balance: number;
+  address: string;
+  privateKeyHashed: string;
+  passwordHash: string;
+  privateKeyIv: string;
+  encryptedMnemonic: string;
+  isPhraseSaved: boolean;
+  passwordHash: string;
+  mnemonicIv: string;
+  assets: Asset[];
+  transactions: Transaction[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+interface User {
+  _id: string;
+  username: string;
+  email: string;
+  passwordHash: string;
+  transactions: Transaction[];
+  wallets: Wallet[];
+  notifications: Notification[];
+  createdAt?: string;
+  updatedAt?: string;
+}
 const Home = () => {
   const [showSetPinBanner, setShowSetPinBanner] = useState(false);
   const [phraseBanner, setPhraseBanner] = useState(false);
   const [unreadNotis, setUnreadNotis] = useState(0);
   const [selectedNoti, setSelectedNoti] = useState(null);
-  const [currentUser, setCurrentUser] = useState({ wallets: [], _id: "" });
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [showDetails, setShowDetails] = useState(false);
   const [showRevealPhrase, setShowRevealPhrase] = useState(false);
   const [mnemonicWords, setMnemonicWords] = useState<string[]>([]);
@@ -55,7 +113,6 @@ const Home = () => {
   const [show, setShow] = useState(false);
   const [userInputs, setUserInputs] = useState<string[]>(["", "", ""]);
 
-  const [password, setPassword] = useState("");
   const [form, setForm] = useState({
     password: "",
   });
@@ -69,6 +126,9 @@ const Home = () => {
 
   useEffect(() => {
     if (!loading && user?.username) {
+      if (!selectedWallet || !selectedWallet._id) {
+        return;
+      }
       const result = hasPin(user.username);
       const unreadCount =
         user?.notifications?.filter((n) => n.status === "UNREAD").length || 0;
@@ -83,7 +143,7 @@ const Home = () => {
         setShowSetPinBanner(true);
       }
     }
-  }, [loading, user]);
+  }, [loading, user, selectedWallet]);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -135,6 +195,9 @@ const Home = () => {
   };
 
   const handleRevealPhrase = async () => {
+    if (!selectedWallet || !selectedWallet._id) {
+      return;
+    }
     setLoadingPhrase(true);
     if (form.password === "") {
       setLoadingPhrase(false);
@@ -143,7 +206,7 @@ const Home = () => {
     }
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/wallet/reveal-phrase/${selectedWallet._id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/wallet/reveal-phrase/${selectedWallet?._id}`,
         {
           method: "POST",
           headers: {
@@ -172,6 +235,9 @@ const Home = () => {
   };
 
   const handleToggle = () => setShowPassword(!showPassword);
+  const handleSetPin = () => {
+    navigate("/set-pin");
+  };
 
   return (
     <div className="min-h-screen bg-white text-black p-4 space-y-6">
@@ -287,6 +353,8 @@ const Home = () => {
                               );
 
                               if (!res.ok) {
+                                const data = await res.json();
+                                toast(data.message);
                                 throw new Error(
                                   "Failed to mark notification as read",
                                 );
@@ -443,7 +511,9 @@ const Home = () => {
               </div>
               <div className="flex gap-4 mt-5">
                 <Button
-                  onClick={() => navigate(`/send-crypto/${selectedWallet._id}`)}
+                  onClick={() =>
+                    navigate(`/send-crypto/${selectedWallet?._id}`)
+                  }
                   className="flex items-center gap-2 flex-1 bg-black text-white cursor-pointer transition-all 
                  hover:bg-white hover:text-black hover:shadow-xl hover:border-2 hover:border-black"
                 >
@@ -479,10 +549,10 @@ const Home = () => {
                         {selectedWallet?.address ? (
                           <>
                             <div className="bg-white p-4 border rounded-lg">
-                              <QRCode value={selectedWallet.address} />
+                              <QRCode value={selectedWallet?.address} />
                             </div>
                             <p className="font-mono text-center text-sm break-all text-gray-600">
-                              {selectedWallet.address}
+                              {selectedWallet?.address}
                             </p>
                           </>
                         ) : (
