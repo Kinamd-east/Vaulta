@@ -26,7 +26,7 @@ const SendCrypto = () => {
   const [pin, setPin] = useState("");
   const [form, setForm] = useState({
     addressTo: "",
-    amountInEth: 0,
+    amountInEth: "",
   });
   const [error, setError] = useState("");
 
