@@ -111,7 +111,7 @@ const SendCrypto = () => {
       return;
     }
 
-    if (form.amountInEth === 0) {
+    if (parseFloat(form.amountInEth) === 0) {
       toast("Amount has to be higher than 0");
       setError("Amount has to be higher than 0");
       setLoading(false);
