@@ -23,6 +23,7 @@ app.use(
   }),
 );
 app.use(express.json());
+app.set("trust proxy", 1); // Required for cookies to work on Render!
 app.use(bodyParser.json());
 app.use(
   session({
