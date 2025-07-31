@@ -17,6 +17,7 @@ const SendCrypto = () => {
   const navigate = useNavigate();
   const { user } = useUserAuthentication();
   const { id } = useParams();
+  const [isSendingPin, setIsSendingPin] = useState(false);
   const [wallet, setWallet] = useState(null);
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
@@ -32,7 +33,7 @@ const SendCrypto = () => {
   };
 
   const handleConfirm = async () => {
-    setLoading(true);
+    setIsSendingPin(true);
     try {
       const res = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/wallet/send-crypto/${id}`,
@@ -52,7 +53,7 @@ const SendCrypto = () => {
 
       if (!res.ok) {
         toast(data.message);
-        setLoading(false);
+        setIsSendingPin(false);
         return;
       }
 
@@ -61,7 +62,7 @@ const SendCrypto = () => {
     } catch (err) {
       toast("Transfer failed");
     } finally {
-      setLoading(false);
+      setIsSendingPin(false);
     }
   };
 
@@ -178,9 +179,11 @@ const SendCrypto = () => {
                   className="bg-white/5 text-black placeholder-white/90 border-white/20"
                   required
                 />
-                <p className="text-sm text-white">{wallet?.balance}</p>
+                <p className="text-sm text-black font-light">
+                  Wallet Balance: {wallet?.balance}
+                </p>
                 <Button type="submit" className="w-full mt-2 cursor-pointer">
-                  {loading ? "Sending" : "Send"}
+                  {loading ? "Please Wait" : "Send"}
                 </Button>
               </form>
             </CardContent>
@@ -193,21 +196,39 @@ const SendCrypto = () => {
           transition={{ duration: 0.7, ease: "easeOut" }}
           className="w-full max-w-sm"
         >
-          <InputOTP
-            maxLength={6}
-            value={pin}
-            onChange={setPin}
-            onComplete={handleConfirm}
-          >
-            <InputOTPGroup>
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-              <InputOTPSlot index={2} />
-              <InputOTPSlot index={3} />
-              <InputOTPSlot index={4} />
-              <InputOTPSlot index={5} />
-            </InputOTPGroup>
-          </InputOTP>
+          <Card className="bg-black/4 backdrop-blur-md shadow-2xl border-white/10 text-black">
+            <CardContent className="p-6 flex flex-col items-center gap-2">
+              <h2 className="text-2xl font-bold mb-4 text-center">
+                Confirm your email
+              </h2>
+              <p className="text-gray-500 text-sm font-light">
+                Check your email for a code.{" "}
+                {user?.email
+                  ? `${user?.email.slice(0, 3).toLowerCase()}...@${user?.email
+                      .split("@")[1]
+                      .toLowerCase()}`
+                  : ""}
+              </p>
+              <InputOTP
+                maxLength={6}
+                value={pin}
+                onChange={setPin}
+                onComplete={handleConfirm}
+              >
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                  <InputOTPSlot index={2} />
+                  <InputOTPSlot index={3} />
+                  <InputOTPSlot index={4} />
+                  <InputOTPSlot index={5} />
+                </InputOTPGroup>
+              </InputOTP>
+              <Button className="cursor-pointer" onClick={() => navigate("/")}>
+                Cancel
+              </Button>
+            </CardContent>
+          </Card>
         </motion.div>
       )}
     </div>

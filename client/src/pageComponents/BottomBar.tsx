@@ -1,4 +1,4 @@
-import { Home, Wallet, Plus, Activity, Settings } from "lucide-react";
+import { Home, Wallet, Plus, Activity } from "lucide-react";
 import { cn } from "@/lib/utils"; // Optional: for merging classes
 import { Link } from "react-router";
 

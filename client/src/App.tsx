@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import { Routes, Route } from "react-router";
 import { Toaster } from "@/components/ui/sonner";
 import "./index.css";
