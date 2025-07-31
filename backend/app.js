@@ -18,7 +18,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL, // your React app's address
+    origin: "https://vaulta-1.onrender.com", // your React app's address
     credentials: true, // allow cookies/session
   }),
 );
