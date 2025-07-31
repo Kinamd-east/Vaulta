@@ -34,7 +34,7 @@ const BottomBarItem = ({
   icon: React.ReactNode;
   label?: string;
   active?: boolean;
-  link?: string;
+  link: string;
 }) => {
   return (
     <Link

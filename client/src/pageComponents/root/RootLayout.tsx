@@ -1,4 +1,4 @@
-import { Outlet, Navigate } from "react-router";
+import { Navigate } from "react-router";
 import BottomBar from "../BottomBar";
 import PinGate from "../PinGate";
 import useUserAuthentication from "../../hooks/useUserAuthentication";

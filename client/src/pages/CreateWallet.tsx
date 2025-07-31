@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { SiEthereum, SiSolana } from "react-icons/si";
+import { SiEthereum } from "react-icons/si";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
 import { Input } from "@/components/ui/input";
@@ -12,9 +12,6 @@ const CreateWallet = () => {
   );
   const [walletName, setWalletName] = useState("");
   const [isCreatingWallet, setisCreatingWallet] = useState(false);
-  const [newWalletInfo, setWalletInfo] = useState({
-    mnemonic: "",
-  });
   const [walletPassword, setWalletPassword] = useState("");
   const navigate = useNavigate();
   const [walletConfirmPassword, setWalletConfirmPassword] = useState("");

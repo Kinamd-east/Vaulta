@@ -1,14 +1,13 @@
-"use client";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "motion/react";
 import React, {
-  ReactNode,
   createContext,
   useContext,
   useEffect,
   useRef,
   useState,
 } from "react";
+import type { ReactNode } from "react";
 
 interface ModalContextType {
   open: boolean;
@@ -77,7 +76,7 @@ export const ModalBody = ({
     }
   }, [open]);
 
-  const modalRef = useRef(null);
+  const modalRef = useRef<HTMLDivElement>(null);
   const { setOpen } = useModal();
   useOutsideClick(modalRef, () => setOpen(false));
 

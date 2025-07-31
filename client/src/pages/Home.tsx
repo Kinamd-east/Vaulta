@@ -75,7 +75,6 @@ interface Wallet {
   privateKeyIv: string;
   encryptedMnemonic: string;
   isPhraseSaved: boolean;
-  passwordHash: string;
   mnemonicIv: string;
   assets: Asset[];
   transactions: Transaction[];
@@ -98,7 +97,7 @@ const Home = () => {
   const [showSetPinBanner, setShowSetPinBanner] = useState(false);
   const [phraseBanner, setPhraseBanner] = useState(false);
   const [unreadNotis, setUnreadNotis] = useState(0);
-  const [selectedNoti, setSelectedNoti] = useState(null);
+  const [selectedNoti, setSelectedNoti] = useState<Notification | null>(null);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [showDetails, setShowDetails] = useState(false);
   const [showRevealPhrase, setShowRevealPhrase] = useState(false);
@@ -118,10 +117,9 @@ const Home = () => {
   });
   const [loadingPhrase, setLoadingPhrase] = useState(false);
   const [passwordModal, setPasswordModal] = useState(false);
-  const [error, setError] = useState("");
 
   const { user, loading } = useUserAuthentication();
-  const [selectedWallet, setSelectedWallet] = useState(null);
+  const [selectedWallet, setSelectedWallet] = useState<Wallet | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {

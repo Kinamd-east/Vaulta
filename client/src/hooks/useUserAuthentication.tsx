@@ -37,7 +37,6 @@ interface Wallet {
   balance: number;
   address: string;
   privateKeyHashed: string;
-  passwordHash: string;
   privateKeyIv: string;
   encryptedMnemonic: string;
   isPhraseSaved: boolean;
