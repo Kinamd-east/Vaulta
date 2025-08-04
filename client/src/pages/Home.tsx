@@ -117,30 +117,34 @@ const Home = () => {
   const [loadingPhrase, setLoadingPhrase] = useState(false);
   const [passwordModal, setPasswordModal] = useState(false);
 
-  const { user, loading } = useUserAuthentication();
+  const { user, loading, refetchUser } = useUserAuthentication();
   const [selectedWallet, setSelectedWallet] = useState<Wallet | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading && user?.username) {
-      if (!selectedWallet || !selectedWallet._id) {
-        return;
-      }
-      const result = hasPin(user.username);
-      const unreadCount =
-        user?.notifications?.filter((n) => n.status === "UNREAD").length || 0;
-      setUnreadNotis(unreadCount);
-      setCurrentUser(user);
+    if (loading || !user?.username) return;
 
-      if (user.wallets?.length > 0 && !selectedWallet) {
-        setSelectedWallet(user.wallets[0]); // default wallet
-      }
+    // Set unread notifications
+    const unreadCount =
+      user.notifications?.filter((n) => n.status === "UNREAD").length || 0;
+    setUnreadNotis(unreadCount);
 
-      if (!result) {
-        setShowSetPinBanner(true);
-      }
+    // Set user
+    setCurrentUser(user);
+
+    // Set wallet only if not already set
+    if (!selectedWallet && user.wallets?.length > 0) {
+      console.log("Setting selectedWallet:", user.wallets[0]);
+      setSelectedWallet(user.wallets[0]);
+    }
+
+    // Set PIN banner
+    const result = hasPin(user.username);
+    if (!result) {
+      setShowSetPinBanner(true);
     }
   }, [loading, user, selectedWallet]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -332,9 +336,9 @@ const Home = () => {
 
                 {/* Notification List Placeholder */}
                 <div className="space-y-3 p-3">
-                  {!loading && user ? (
-                    user.notifications.length > 0 ? (
-                      user.notifications.map((notis, index) => (
+                  {!loading && currentUser ? (
+                    currentUser.notifications.length > 0 ? (
+                      currentUser.notifications.map((notis, index) => (
                         <div
                           key={index}
                           onClick={async () => {
@@ -458,7 +462,7 @@ const Home = () => {
                   <DropdownMenuContent>
                     <DropdownMenuLabel>Wallets</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    {user?.wallets.map((wallet, idx) => (
+                    {currentUser?.wallets.map((wallet, idx) => (
                       <DropdownMenuItem
                         key={idx}
                         onClick={() => setSelectedWallet(wallet)}
