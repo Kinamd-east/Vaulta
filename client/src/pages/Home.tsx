@@ -225,6 +225,7 @@ const Home = () => {
         console.log(res);
         throw new Error("Failed to fetch mnemonic phrase");
       }
+      await refetchUser();
       setPasswordModal(false);
       setMnemonicWords(data.mnemonic.split(" ")); // assuming it's space-separated
       setShowRevealPhrase(true);

@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { SiEthereum } from "react-icons/si";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
+import useUserAuthentication from "@/hooks/useUserAuthentication";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
@@ -13,6 +14,7 @@ const CreateWallet = () => {
   const [walletName, setWalletName] = useState("");
   const [isCreatingWallet, setisCreatingWallet] = useState(false);
   const [walletPassword, setWalletPassword] = useState("");
+  const { refetchUser } = useUserAuthentication();
   const navigate = useNavigate();
   const [walletConfirmPassword, setWalletConfirmPassword] = useState("");
   const [walletCreated, setWalletCreated] = useState(false);
@@ -67,6 +69,7 @@ const CreateWallet = () => {
         throw new Error(errorData.message || "Wallet creation failed");
         setisCreatingWallet(false);
       }
+      await refetchUser();
 
       // Redirect to dashboard or home after successful signup
       setisCreatingWallet(false);
