@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import useUserAuthentication from "@/hooks/useUserAuthentication";
-import { ethers } from "ethers";
+// import { ethers } from "ethers";
 
 const SeedPhraseInput = () => {
   const [words, setWords] = useState<string[]>(Array(12).fill(""));
