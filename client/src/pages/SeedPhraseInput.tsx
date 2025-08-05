@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import useUserAuthentication from "@/hooks/useUserAuthentication";
 import { ethers } from "ethers";
 
 const SeedPhraseInput = () => {
@@ -8,9 +9,8 @@ const SeedPhraseInput = () => {
   const [walletName, setWalletName] = useState("");
   const [walletPassword, setWalletPassword] = useState("");
   const [walletConfirmPassword, setWalletConfirmPassword] = useState("");
+  const { refetchUser } = useUserAuthentication();
   const [isCreatingWallet, setIsCreatingWallet] = useState(false);
-  const [walletCreated, setWalletCreated] = useState(false);
-  const [selectedChain, setSelectedChain] = useState("ethereum"); // can be updated dynamically
   const [showPassword, setShowPassword] = useState(false);
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -81,7 +81,7 @@ const SeedPhraseInput = () => {
     const mnemonic = words.join(" ").toLowerCase();
 
     // Validate mnemonic format
-    if (!ethers.utils.isValidMnemonic(mnemonic)) {
+    if (!ethers.isValidMnemonic(mnemonic)) {
       toast.error("Invalid seed phrase");
       return;
     }
@@ -90,7 +90,7 @@ const SeedPhraseInput = () => {
 
     const walletInfo = {
       name: walletName,
-      chain: selectedChain,
+      chain: "ethereum",
       password: walletPassword,
       mnemonic,
     };
@@ -119,7 +119,6 @@ const SeedPhraseInput = () => {
       await refetchUser();
 
       setIsCreatingWallet(false);
-      setWalletCreated(true);
       toast.success("Wallet successfully imported!");
       navigate("/");
     } catch (err) {
@@ -148,7 +147,9 @@ const SeedPhraseInput = () => {
             onChange={(e) => handleChange(index, e.target.value)}
             onKeyDown={(e) => handleKeyDown(e, index)}
             onPaste={index === 0 ? handlePaste : undefined}
-            ref={(el) => (inputRefs.current[index] = el)}
+            ref={(el) => {
+              inputRefs.current[index] = el;
+            }}
             placeholder={`Word ${index + 1}`}
             style={{
               padding: "8px",
