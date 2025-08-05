@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router";
+import { toast } from "sonner";
 import { ethers } from "ethers";
 
 const SeedPhraseInput = () => {
