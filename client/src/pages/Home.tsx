@@ -617,7 +617,7 @@ const Home = () => {
             {/* Import Wallet Card */}
             <Card
               className="flex-1 cursor-pointer transition-transform hover:scale-105 hover:shadow-2xl bg-white text-black"
-              onClick={() => console.log("Import wallet")}
+              onClick={() => navigate("/import-wallet")}
             >
               <CardContent className="p-6 flex flex-col items-center justify-center gap-4">
                 <Download className="w-10 h-10 text-green-600" />

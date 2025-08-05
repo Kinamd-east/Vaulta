@@ -7,6 +7,7 @@ import Signup from "./pages/Signup";
 import SendCrypto from "./pages/SendCrypto";
 import Home from "./pages/Home";
 import Signin from "./pages/Signin";
+import SeedPhraseInput from "./pages/SeedPhraseInput";
 import SetPin from "./pages/SetPin";
 import CreateWallet from "./pages/CreateWallet";
 
@@ -24,6 +25,8 @@ const App = () => {
           <Route path="/set-pin" element={<SetPin />} />
           <Route path="/send-crypto/:id" element={<SendCrypto />} />
           <Route path="/create-wallet" element={<CreateWallet />} />
+          <Route path="/create-wallet" element={<CreateWallet />} />
+          <Route path="/import-wallet" element={<SeedPhraseInput />} />
         </Route>
       </Routes>
       <Toaster />

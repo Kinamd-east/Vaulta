@@ -81,10 +81,16 @@ const importWallet = async (req, res) => {
   const userId = req.session.userId;
   const { mnemonic, name, chain, password } = req.body;
 
-  if (!mnemonic || !name || !chain || !password) {
-    return res
-      .status(400)
-      .json({ error: "Mnemonic, name, chain, and password are required" });
+  if (
+    !mnemonic ||
+    mnemonic.split(" ").length < 12 ||
+    !name ||
+    !chain ||
+    !password
+  ) {
+    return res.status(400).json({
+      error: "Mnemonic, name, chain, and password are required",
+    });
   }
 
   try {
