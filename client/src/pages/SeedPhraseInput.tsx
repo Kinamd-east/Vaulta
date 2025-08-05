@@ -81,10 +81,10 @@ const SeedPhraseInput = () => {
     const mnemonic = words.join(" ").toLowerCase();
 
     // Validate mnemonic format
-    if (!ethers.isValidMnemonic(mnemonic)) {
-      toast.error("Invalid seed phrase");
-      return;
-    }
+    // if (!ethers.isValidMnemonic(mnemonic)) {
+    //   toast.error("Invalid seed phrase");
+    //   return;
+    // }
 
     setIsCreatingWallet(true);
 
